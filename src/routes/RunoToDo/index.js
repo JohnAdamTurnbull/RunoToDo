@@ -1,16 +1,34 @@
-// import { ObjectId } from 'mongodb';
-
+import { ObjectId } from 'mongodb';
 import clientPromise from '$lib/mongodb-client'
+// import { clientPromise} from ...
+
 
 export async function get(request) {
-    //const completed = 'true';
-    const completed = request.url.searchParams.get('completed') === 'true' ? true : false;
-    return {
-        status: 200,
-        body: {
-            completed: completed
+    
+    try {
+        const completed = request.url.searchParams.get('completed') === 'true' ? true : false;
+        // const dbConnection = await connectToDatabase()
+        const dbConnection = await clientPromise;
+        const db = dbConnection.db
+        const collection = db.collection('ToDos')
+        const todos = await collection.find({completed}).toArray()
+        
+
+        return {
+            status: 200,
+            body: {
+                todos
+            }
         }
-    }
+    } catch(err) {
+        return {
+            status: 500,
+            body: {
+                error: 'A server error occured'
+            }
+        }
+
+    }       
 };
 
 /*
