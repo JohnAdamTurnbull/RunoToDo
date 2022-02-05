@@ -54,7 +54,6 @@ export async function put(request) {
 
 };
 
-export async function del(request) {
 
 };
 
